@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>坐标转换</title>
+	<script src="./index.js"></script>
+</head>
+<body>
+	<div> 
+		<button onclick="bd_hx()">百度转火星</button>
+		<button onclick="hx_bd()">火星转百度</button>
+		<button onclick="wgs_bd()">WGS84转百度</button>		
+		<button onclick="bd_wgs()">百度转WGS84</button>
+		<button onclick="hx_wgs()">火星转WGS84</button>
+		<button onclick="wgs_hx()">WGS84转火星</button>		
+	</div>
+	<p>____________________lng(经度)______________________|________________________lat(纬度)____________________</p>
+	<div>
+	    <textarea id="input1" style="width:350px; height:750px;position: fixed;top: 8em;left: 1em;">116.397</textarea>
+		<textarea id="input2" style="width:350px; height:750px;position: fixed;top: 8em;left: 30em">39.916</textarea>
+		<textarea id="output" style="width:700px; height:750px;position: fixed;top: 8em;right: 1em;"></textarea>
+	</div>
+
+	<script type="text/javascript">		
+		var output = "";
+		var x_PI = 3.14159265358979324 * 3000.0 / 180.0;
+		var PI = 3.1415926535897932384626;
+		var a = 6378245.0;
+		var ee = 0.00669342162296594323;
+		//1百度转火星
+		function bd_hx(bd_lon, bd_lat) {
+				var pts_lon= new Array();
+				pts_lon=document.getElementById("input1").value.split("\n");
+				var pts_lat= new Array();
+				pts_lat=document.getElementById("input2").value.split("\n");
+				for(i=0;i<pts_lon.length;i++){
+					var bd_lon=pts_lon[i];				
+					var bd_lat=pts_lat[i];
+					var x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+					var x = bd_lon - 0.0065;
+					var y = bd_lat - 0.006;
+					var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+					var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
+					var gg_lng = z * Math.cos(theta);
+					var gg_lat = z * Math.sin(theta);
+					document.getElementById("output").value=document.getElementById("output").value+gg_lng+","+gg_lat+"\n"; 
+					}
+		}
+		//2火星转百度
+		function hx_bd(lng, lat) {
+				var pts_lon= new Array();
+				pts_lon=document.getElementById("input1").value.split("\n");
+				var pts_lat= new Array();
+				pts_lat=document.getElementById("input2").value.split("\n");
+				for(i=0;i<pts_lon.length;i++){
+					var lng=pts_lon[i];				
+					var lat=pts_lat[i];
+					
+					var z = Math.sqrt(lng * lng + lat * lat) + 0.00002 * Math.sin(lat * x_PI);
+					var theta = Math.atan2(lat, lng) + 0.000003 * Math.cos(lng * x_PI);
+					var bd_lng = z * Math.cos(theta) + 0.0065;
+					var bd_lat = z * Math.sin(theta) + 0.006;
+
+					document.getElementById("output").value=document.getElementById("output").value+bd_lng+","+bd_lat+"\n"; 
+					}
+		}
+		//3 WGS84转百度
+		function wgs_bd(){
+			var pts_lon=document.getElementById("input1").value.split("\n");
+			var pts_lat=document.getElementById("input2").value.split("\n");
+			for(i=0;i<pts_lon.length;i++){
+				var lng=pts_lon[i];				
+				var lat=pts_lat[i];
+				//1先把wgs84转成国测局坐标
+				var wgs84togcj02=coordtransform.wgs84togcj02(lng,lat);
+				console.log(wgs84togcj02);
+				//2把国测局坐标转成百度坐标。
+				var gcj02tobd09= coordtransform.gcj02tobd09(wgs84togcj02[0],wgs84togcj02[1]);
+				//控制台打印
+				console.log(gcj02tobd09);
+				document.getElementById("output").value+=gcj02tobd09;
+			}
+		}
+		//4 百度转WGS84
+		function bd_wgs(){
+			var pts_lon=document.getElementById("input1").value.split("\n");
+			var pts_lat=document.getElementById("input2").value.split("\n");
+			for(i=0;i<pts_lon.length;i++){
+				var lng=pts_lon[i];				
+				var lat=pts_lat[i];
+				//1先把百度转成国测局坐标
+				var bd09togcj02 = coordtransform.bd09togcj02(lng,lat);
+				console.log(bd09togcj02);
+				//2把国测局坐标转成WGS84坐标。
+				var gcj02towgs84 = coordtransform.gcj02towgs84(wgs84togcj02[0],wgs84togcj02[1]);
+				//控制台打印
+				console.log(gcj02towgs84);
+				document.getElementById("output").value+=gcj02towgs84;
+			}
+		}
+		//5 火星转WGS84
+		function hx_wgs(){
+			var pts_lon=document.getElementById("input1").value.split("\n");
+			var pts_lat=document.getElementById("input2").value.split("\n");
+			for(i=0;i<pts_lon.length;i++){
+				var lng=pts_lon[i];				
+				var lat=pts_lat[i];
+				//1把国测局坐标转成WGS84坐标。
+				var gcj02towgs84 = coordtransform.gcj02towgs84(lng,lat);
+				console.log(gcj02towgs84);
+				document.getElementById("output").value+=gcj02towgs84;
+			}
+		}
+		//6 WGS84转火星
+		function wgs_hx(lng, lat) {
+				var pts_lon= new Array();
+				pts_lon=document.getElementById("input1").value.split("\n");
+				var pts_lat= new Array();
+				pts_lat=document.getElementById("input2").value.split("\n");
+				for(i=0;i<pts_lon.length;i++){
+					var lng=pts_lon[i];				
+					var lat=pts_lat[i];
+					
+					var dlng = transformlng(lng - 105.0, lat - 35.0);
+					var dlat = transformlat(lng - 105.0, lat - 35.0);
+			 
+					var radlat = lat / 180.0 * PI;
+					var magic = Math.sin(radlat);
+					magic = 1 - ee * magic * magic;
+					var sqrtmagic = Math.sqrt(magic);
+			 
+					dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI);
+					dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI);
+				   
+					var mglat = lat + dlat;
+					var mglng = lng + dlng;
+					document.getElementById("output").value=document.getElementById("output").value+mglng+","+mglat+"\n"; 
+					}
+		}		
+	</script>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</body>
+	
+</html>
