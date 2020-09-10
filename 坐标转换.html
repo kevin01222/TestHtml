@@ -80,7 +80,7 @@
 				var gcj02tobd09= coordtransform.gcj02tobd09(wgs84togcj02[0],wgs84togcj02[1]);
 				//控制台打印
 				console.log(gcj02tobd09);
-				document.getElementById("output").value+=gcj02tobd09;
+				document.getElementById("output").value+=gcj02tobd09+"\n";
 			}
 		}
 		//4 百度转WGS84
@@ -94,10 +94,10 @@
 				var bd09togcj02 = coordtransform.bd09togcj02(lng,lat);
 				console.log(bd09togcj02);
 				//2把国测局坐标转成WGS84坐标。
-				var gcj02towgs84 = coordtransform.gcj02towgs84(wgs84togcj02[0],wgs84togcj02[1]);
+				var gcj02towgs84 = coordtransform.gcj02towgs84(bd09togcj02[0],bd09togcj02[1]);
 				//控制台打印
 				console.log(gcj02towgs84);
-				document.getElementById("output").value+=gcj02towgs84;
+				document.getElementById("output").value+=gcj02towgs84+"\n";
 			}
 		}
 		//5 火星转WGS84
@@ -110,56 +110,22 @@
 				//1把国测局坐标转成WGS84坐标。
 				var gcj02towgs84 = coordtransform.gcj02towgs84(lng,lat);
 				console.log(gcj02towgs84);
-				document.getElementById("output").value+=gcj02towgs84;
+				document.getElementById("output").value+=gcj02towgs84+"\n";
 			}
 		}
 		//6 WGS84转火星
-		function wgs_hx(lng, lat) {
-				var pts_lon= new Array();
-				pts_lon=document.getElementById("input1").value.split("\n");
-				var pts_lat= new Array();
-				pts_lat=document.getElementById("input2").value.split("\n");
-				for(i=0;i<pts_lon.length;i++){
-					var lng=pts_lon[i];				
-					var lat=pts_lat[i];
-					
-					var dlng = transformlng(lng - 105.0, lat - 35.0);
-					var dlat = transformlat(lng - 105.0, lat - 35.0);
-			 
-					var radlat = lat / 180.0 * PI;
-					var magic = Math.sin(radlat);
-					magic = 1 - ee * magic * magic;
-					var sqrtmagic = Math.sqrt(magic);
-			 
-					dlng = (dlng * 180.0) / (a / sqrtmagic * Math.cos(radlat) * PI);
-					dlat = (dlat * 180.0) / ((a * (1 - ee)) / (magic * sqrtmagic) * PI);
-				   
-					var mglat = lat + dlat;
-					var mglng = lng + dlng;
-					document.getElementById("output").value=document.getElementById("output").value+mglng+","+mglat+"\n"; 
-					}
+		function wgs_hx() {
+			var pts_lon=document.getElementById("input1").value.split("\n");
+			var pts_lat=document.getElementById("input2").value.split("\n");
+			for(i=0;i<pts_lon.length;i++){
+				var lng=pts_lon[i];
+				var lat=pts_lat[i];
+				var wgs84togcj02=coordtransform.wgs84togcj02(lng,lat);
+				console.log(wgs84togcj02);
+				document.getElementById("output").value+=wgs84togcj02+"\n";
+			}
 		}		
 	</script>
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	</body>
 	
 </html>
