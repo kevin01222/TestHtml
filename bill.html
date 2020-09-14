@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>分期账单</title>
+<style type="text/css">table tr td,th{ border:1 px solid #000;}</style>
+</head>
+<body>
+<table border="1" id="table"> <tr> <th>id</th> <th> name</th> <th>还款日</th> <th>还款金额</th>
+<th>剩余还款期数</th>
+</tr>
+</table> <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js">
+</script> 
+<script>
+$(function(){
+$.get('http://localhost:8082/eye/bill/getSource',function(data,i){
+ $.each(data.data,function(i,item){
+	$("#table").append("<tr><td>"+item.id+"</td><td>"+item.name+"</td><td>"+item.billDay+"</td><td>"+item.billAmount+"</td><td>"+item.periods+"</td></tr>");
+ });
+ },"json");
+ });
+</script>
+</body>
+</html>
