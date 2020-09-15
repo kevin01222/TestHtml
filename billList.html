@@ -6,34 +6,48 @@
 <style type="text/css">table tr td,th{ border:1 px solid #000;}</style>
 </head>
 <body>
-<div style="width:10000px;overflow:auto;overflow-x:auto" id="div"></div>
+<div style="width:15000px;overflow:auto;overflow-x:auto" id="div"></div>
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js">
 </script> 
 <script>
 $(function(){
-	$("#div").append("<table border=\"1\" id='count' style=\"display:inline\"> <tr><th>总还款金额</th></tr></table>");
+	$("#div").append("<table border=\"1\" id='count' style=\"display:inline\"> <tr><th>还款月</th><th>总还款金额</th></tr></table>");
 	
-	$.get('http://localhost:8082/eye/bill/getAll',function(data,i){
-		var sum=new Array();
-		$.each(data.data,function(i,item){
-			//sum[i]=new Array();
+	$.get('http://ysfcds.cn/eye/bill/getAll',function(data,i){
+		//var sum=new Array();
+		console.log(data.data.countDay);
+		console.log(data.data.countMonth);
+		$.each(data.data.ret_list,function(i,item){
 			var id="table"+i;
 			$("#div").append("<table border=\"1\"  id=\""+id+"\" style=\"display:inline\"> <tr><th> name</th> <th>还款日</th> <th>还款金额</th></tr></table>");
 			$.each(item.list,function(j,item2){
 				$("#"+id).append("<tr><td>"+item2.name+"</td><td>"+item2.billDay+"</td><td>"+item2.billAmount+"</td></tr>");
-				sum[i,j]+="+"+item2.billAmount;
-				
+				//sum[i,j]+="+"+item2.billAmount;
 			});
 		});
-		console.log(sum)
+		//console.log(sum);
+/* 		var sum_count=0;
 		$.each(sum,function(i,item){
 			var count=0;
 			arr=item.split("+");
 			for(i=1;i<arr.length;i++){
 				count+=parseFloat(arr[i]);
 			}
-			$("#count").append("<tr><td>"+count+"</td></tr>");
+			sum_count+=count;
+			$("#count").append("<tr><td></td><td>"+count+"</td></tr>");
 		})
+		$("#count").append("<tr><td>合计</td><td>"+sum_count+"</td></tr>"); */
+		var sum_count=0;
+		$.each(data.data.countMonth,function(key,item){
+			var date=key;
+			var count=0;
+			$.each(item,function(j,jtem){
+				count=jtem+count
+			})
+			sum_count+=count;
+			$("#count").append("<tr><td>"+date+"</td><td>"+parseFloat(count).toFixed(2)+"</td></tr>");
+		});
+		$("#count").append("<tr><td>合计</td><td>"+sum_count+"</td></tr>");
 	 },"json"); 
  });
 </script>
