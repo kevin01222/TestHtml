@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>根据表格生成sql</title>
+		<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+	<body>
+		<div id="app">
+			<textarea  v-model="message" rows="20" cols="100" >
+				</textarea>
+			<button v-on:click="this.deal">开始</button>
+			<div>
+			   <table id="table">
+					<thead>
+						 <tr>
+							 <th>批号</th>
+							 <th>数量</th>
+						 </tr>
+					</thead>
+					 <tbody>
+						  <tr v-for="(obj,index) in line">
+							  <td>{{obj.pihao}}</td>
+							  <td>{{obj.shuliang}}</td>
+						  </tr>
+					</tbody>
+				</table> 
+			</div>
+		</div>
+		<script>
+				var app = new Vue({
+					el: '#app',
+					data: {
+						message:'葡萄糖,putaotang123,50 \n 西瓜霜,xiguashuang123,100 \n 葡萄糖,putaotang123,20 \n 洗洁精,xjj123,10 \n 酒精,jiujing123,100 \n 西瓜霜,xgs123,60 \n 酒精,jiujing123,40',
+						//result:'',
+						obj:{pihao:'',shuliang:''},
+						line:[],
+					},
+					methods: {
+						deal:function(){
+							var message=this.message;
+							var line_list=message.split("\n");
+							var map=new Map();
+							for(var i=0;i<line_list.length;i++){
+								var line=line_list[i]
+								obj=this.line2obj(line);
+								console.log("品名："+line.split(",")[1]);
+								if(map.has(obj.pihao)){
+									var old_num=map.get(obj.pihao);
+									map.set(obj.pihao,obj.shuliang+old_num);
+								}else{
+									map.set(obj.pihao,obj.shuliang);
+								}
+							}
+							var result='';
+							map.forEach(function(value,key){
+								console.log(key+":"+value);
+								result+="<tr>"+key+":"+value+"</tr>";
+								app.line.push({'pihao':key, 'shuliang':value});
+							});
+						},
+						line2obj:function(line){
+							var obj={};
+							obj.pihao=line.split(",")[1];
+							obj.pinming=line.split(",")[0];
+							obj.shuliang=Number(line.split(",")[2]);
+							return obj;
+						},
+					},
+				});
+			</script>
+	</body>
+</html>
