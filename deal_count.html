@@ -7,8 +7,10 @@
 	</head>
 	<body>
 		<div id="app">
-			<textarea  v-model="message" rows="20" cols="100" >
-				</textarea>
+			<p>请输入文字，批号，数量（如果不能够直接说出数量，可以拆开三个说：个数、层数、余数）</p>
+			<textarea v-model="message1" row="20" cols="100"></textarea>
+			<button v-on:click="this.trans">转换</button>
+			<textarea  v-model="message2" rows="20" cols="100" ></textarea>
 			<button v-on:click="this.deal">开始</button>
 			<div>
 			   <table id="table">
@@ -31,15 +33,19 @@
 				var app = new Vue({
 					el: '#app',
 					data: {
-						message:'葡萄糖,putaotang123,50 \n 西瓜霜,xiguashuang123,100 \n 葡萄糖,putaotang123,20 \n 洗洁精,xjj123,10 \n 酒精,jiujing123,100 \n 西瓜霜,xgs123,60 \n 酒精,jiujing123,40',
+						message2:'葡萄糖,putaotang123,一层5个,一共13层,余数2个 \n 西瓜霜,xiguashuang123,100个 \n 葡萄糖,putaotang123,20个 \n 洗洁精,xjj123,10个 \n 酒精,jiujing123,100 \n 西瓜霜,xgs123,60 \n 酒精,jiujing123,40',
 						//result:'',
 						obj:{pihao:'',shuliang:''},
 						line:[],
+						message1:''
 					},
 					methods: {
+						trans:function(){
+							alert(123);
+						},
 						deal:function(){
-							var message=this.message;
-							var line_list=message.split("\n");
+							var message2=this.message2;
+							var line_list=message2.split("\n");
 							var map=new Map();
 							for(var i=0;i<line_list.length;i++){
 								var line=line_list[i]
@@ -52,6 +58,7 @@
 									map.set(obj.pihao,obj.shuliang);
 								}
 							}
+							console.log(map);
 							var result='';
 							map.forEach(function(value,key){
 								console.log(key+":"+value);
@@ -63,7 +70,20 @@
 							var obj={};
 							obj.pihao=line.split(",")[1];
 							obj.pinming=line.split(",")[0];
-							obj.shuliang=Number(line.split(",")[2]);
+							str_arr=line.split(",");
+							console.log("个数："+str_arr.length);
+							if(str_arr.length==3){
+								obj.shuliang=Number(str_arr[2].replace(/[^0-9]/ig,""));
+							}else if(str_arr.length==5){
+								var geshu=Number(str_arr[2].replace(/[^0-9]/ig,""));
+								console.log("geshu:"+geshu);
+								var cengshu=Number(str_arr[3].replace(/[^0-9]/ig,""));
+								console.log("cengshu:"+cengshu);
+								var yushu=Number(str_arr[4].replace(/[^0-9]/ig,""));
+								console.log("yushu:"+yushu);
+								obj.shuliang=Number(geshu*cengshu+yushu);
+							}
+							
 							return obj;
 						},
 					},
