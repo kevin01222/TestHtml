@@ -75,15 +75,33 @@
 							if(str_arr.length==3){
 								obj.shuliang=Number(str_arr[2].replace(/[^0-9]/ig,""));
 							}else if(str_arr.length==5){
-								var geshu=Number(str_arr[2].replace(/[^0-9]/ig,""));
+/* 								for(i in str_arr){
+									console.log(str_arr[i]);
+									str=str_arr[i];
+									if(/一层[0-9]*个/ig.test(str)){
+										cengshu=Number(str.replace(/[^0-9]/ig,""));
+										
+									}else if((/一共[0-9*]层/ig).test(str)){
+										geshu=Number(str.replace(/[^0-9]/ig,""));
+									}else if(/余数[0-9]*个/ig.test(str)){
+										yushu=Number(str.replace(/[^0-9]/ig,""));
+									}
+								}
+								console.log("geshu:"+geshu+",cengshu:"+cengshu+",yushu:"+yushu); */
+/* 								geshu=Number(str_arr[2].replace(/[^0-9]/ig,""));
 								console.log("geshu:"+geshu);
-								var cengshu=Number(str_arr[3].replace(/[^0-9]/ig,""));
+								cengshu=Number(str_arr[3].replace(/[^0-9]/ig,""));
 								console.log("cengshu:"+cengshu);
-								var yushu=Number(str_arr[4].replace(/[^0-9]/ig,""));
+								yushu=Number(str_arr[4].replace(/[^0-9]/ig,""));
 								console.log("yushu:"+yushu);
+								obj.shuliang=Number(geshu*cengshu+yushu); */
+								
+								geshu=Number(line.match(/一层[1-9][0-9]*个/ig)[0].replace(/[^0-9]/ig,""));
+								cengshu=Number(line.match(/一共[1-9][0-9]*层/ig)[0].replace(/[^0-9]/ig,""));
+								yushu=Number(line.match(/余数[1-9][0-9]*个/ig)[0].replace(/[^0-9]/ig,""));
+								console.log("2:geshu:"+geshu+",cengshu:"+cengshu+",yushu:"+yushu);
 								obj.shuliang=Number(geshu*cengshu+yushu);
 							}
-							
 							return obj;
 						},
 					},
