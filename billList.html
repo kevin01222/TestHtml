@@ -22,12 +22,12 @@ $(function(){
 		var sum_weijiaofei=0;
 		var keyList=[];
 		//按日统计
-		$("#div").append("<table border=\"1\" id='count' style=\"display:inline\"> <tr><th>还款日</th><th>总还款金额</th></tr></table>");
+		$("#div").append("<table border=\"1\" id='count' style=\"display:inline\"> <tr><th>还款日</th><th>平台</th><th>总还款金额</th></tr></table>");
 		$.each(data.data.countObjDay,function(key,item){
 			var date=key;
-			keyList.push(key);
 			var count=0;
 			var weijiaofei=0;
+			console.log("item.name="+item[0].name.substr(0,2))
 			$.each(item,function(j,jtem){
 				if(!jtem.outTime){
 					weijiaofei=weijiaofei+Number(jtem.billAmount);
@@ -37,16 +37,16 @@ $(function(){
 			//过期的
 			if(date<getNowFormatDate()){
 				console.log("过期的月："+date)
-				$("#count").append("<tr><td><del>"+date+"</del></td><td><del>"+parseFloat(count).toFixed(2)+"</del></td></tr>");
+				$("#count").append("<tr><td><del>"+date+"</del></td><td><del>"+item[0].name.substr(0,2)+"</del></td><td><del>"+parseFloat(count).toFixed(2)+"</del></td></tr>");
 			}else{
 				sum_count+=count;
 				sum_weijiaofei+=weijiaofei;
 				if(weijiaofei!=count){
 					//如果有过缴费的，就把总金额划掉，后面加个未交费的。
 					console.log(date+":"+weijiaofei);
-					$("#count").append("<tr><td>"+date+"</td><td><del>"+parseFloat(count).toFixed(2)+"</del>,"+parseFloat(weijiaofei).toFixed(2)+"</td></tr>");
+					$("#count").append("<tr><td>"+date+"</td><td>"+item[0].name.substr(0,2)+"</td><td><del>"+parseFloat(count).toFixed(2)+"</del>,"+parseFloat(weijiaofei).toFixed(2)+"</td></tr>");
 				}else{
-					$("#count").append("<tr><td>"+date+"</td><td>"+parseFloat(count).toFixed(2)+"</td></tr>");
+					$("#count").append("<tr><td>"+date+"</td><td>"+item[0].name.substr(0,2)+"</td><td>"+parseFloat(count).toFixed(2)+"</td></tr>");
 				}
 			}
 		});
@@ -55,6 +55,7 @@ $(function(){
 		$("#div").append("<table border=\"1\" id='count2' style=\"display:inline\"> <tr><th>还款月</th><th>总还款金额</th></tr></table>");
 		$.each(data.data.countObjMonth,function(key,item){
 			var date=key;
+			keyList.push(key);
 			var count=0;
 			var weijiaofei=0;
 			$.each(item,function(j,jtem){
@@ -79,15 +80,21 @@ $(function(){
 		});
 		$("#count2").append("<tr><td>合计</td><td><del>"+parseFloat(sum_count).toFixed(2)+"</del>,"+parseFloat(sum_weijiaofei).toFixed(2)+"</td></tr>");
 		//展示每个分期列表
-		var startMonth=keyList[0].substring(0,7);
-		console.log("startMonth="+startMonth);
 		$.each(data.data.ret_list,function(i,item){
 			var id="table"+i;
-			$("#div").append("<table border=\"1\"  id=\""+id+"\" style=\"display:inline\"> <tr><th> name</th> <th>还款日</th> <th>还款金额</th></tr></table>");
+			$("#div").append("<table border=\"1\"  id=\""+id+"\" style=\"display:inline\"> <tr><th>平台</th> <th>还款日</th> <th>还款金额</th></tr></table>");
 			//添加第一行对齐月份补齐，为了好看
-			if(item.list[0].billDay.substring(0,7)!=startMonth){
-				$("#"+id).append("<tr><td><del>"+item.list[0].name+"</del></td><td><del>"+startMonth+"</del></td><td><del>"+"空"+"</del></td></tr>");
+			for(var i=0;i<keyList.length;i++){
+				var startMonth=keyList[i].substring(0,7);
+				if(item.list[0].billDay.substring(0,7)>startMonth){
+					console.log("keyList[i]="+keyList[i]+",billDay="+item.list[0].billDay);
+					$("#"+id).append("<tr><td><del>"+item.list[0].name+"</del></td><td><del>"+startMonth+"</del></td><td><del>"+"空"+"</del></td></tr>");
+				}else{
+					break;
+				}
+
 			}
+
 			$.each(item.list,function(j,item2){
 				//如果已经还款，或者当前日期已经过了还款日，把它划掉
 				if(item2.billDay<nowDay||item2.outTime!=null){
