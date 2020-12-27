@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>认识table表标签</title>
+<style type="text/css">table tr td,th{ border:1 px solid #000;}</style>
+</head>
+<body>
+
+	<br/>开始时间:<input name="startTime" type="text" value="2020-11-01"/>
+	<br/>结束时间:<input name="endTime" type="text" value="2020-12-01"/>
+	<br/>是否导出表格:<input name="export"type="text" value="否"/>
+	<br/>选择科目:
+	<select name="subject">
+		<option>电子商务师(直播带货)</option>
+		<option>中式烹调师</option>
+		<option>电工</option>
+		<option>焊工</option>
+		<option>茶艺师</option>
+		<option>育婴员</option>
+		<option>中式面点师</option>
+		<option>保健按摩师</option>
+		<option>医疗护理员</option>
+		<option>美容师</option>
+		<option  selected="selected">保育员</option>
+		<option>保洁员</option>
+	</select>
+	<br/>
+	<button  onclick="select()">提交</button>
+
+<table border="1" id="table"> <tr> <th>身份证号</th> <th> 姓名</th> <th> 性别</th> <th> 手机号</th>
+<th>科目</th> <th>提交时间</th> 
+</tr>
+</table> 
+<!--  -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script> 
+<script>
+//	
+$(function(){
+	//
+	select();
+ });
+ 
+function select(){
+	//
+	var startTime=$("input:eq(0)").val();// jquery代码
+	//
+	 data={"startTime":startTime,"endTime":$("input:eq(1)").val(),"export":$("input:eq(2)").val(),"subject":$("select:first").val()};
+	 //
+	 console.log(data);
+	 //
+	 getlist(data);
+ }
+ function getlist(data){
+	 //
+	 $("#table").empty();
+	 //
+	 $.get('http://ysfcds.cn:8081/eye/count/student/getBaoMingBiaoCount',data,function(data,i){
+		 //
+		  $.each(data,function(i,item){
+			  //
+			 $("#table").append("<tr><td>"+item.idCard+"</td><td>"+item.name+"</td><td>"+item.sex+"</td><td>"+item.phone+"</td><td>"+item.subject+"</td><td>"+item.commitTime+"</td></tr>");
+			  });
+	  },"json");
+ }
+</script>
+</body>
+</html>
