@@ -11,6 +11,7 @@
 	<br/>结束时间:<input name="endTime" type="text" value="2020-12-01"/>
 	<br/>是否导出表格:<input name="export"type="text" value="否"/>
 	<br/>选择科目:
+	<!-- select标签 是下拉框 不执行 -->
 	<select name="subject">
 		<option>电子商务师(直播带货)</option>
 		<option>中式烹调师</option>
@@ -26,39 +27,44 @@
 		<option>保洁员</option>
 	</select>
 	<br/>
+	<!-- select（）指的是js代码里的一种方法 ，-->
 	<button  onclick="select()">提交</button>
 
 <table border="1" id="table"> <tr> <th>身份证号</th> <th> 姓名</th> <th> 性别</th> <th> 手机号</th>
 <th>科目</th> <th>提交时间</th> 
 </tr>
 </table> 
-<!--  -->
+<!-- 允许使用jquery代码 -->
 <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script> 
 <script>
-//	
+//	jquery代码格式$  $("")选择器  $.自定义方法  $(function(){..})在页面加载之前执行的方法
 $(function(){
-	//
+	//执行什么内容，select（查询）指的是什么？调用方法，这个方法在下面进行了定义，名字是select，大括号里进行了解释，名字可以变成任何
 	select();
  });
- 
-function select(){
-	//
-	var startTime=$("input:eq(0)").val();// jquery代码
-	//
-	 data={"startTime":startTime,"endTime":$("input:eq(1)").val(),"export":$("input:eq(2)").val(),"subject":$("select:first").val()};
-	 //
-	 console.log(data);
-	 //
-	 getlist(data);
+//页面加载后开始执行，执行的什么？这个select是一个名字，大括号里的是解释它在做什么
+var select=function(){
+	//eq是什么意思？找到滴几个input
+	//开始时间赋值为变量，执行jquery代码，val指什么?input里的value值
+	//将startTime从html里找到并定义成一个变量
+	var startTime=$("input:eq(0)").val();
+	//date是那部分数据？只是命名      给需要的数据写的参数
+	 var input_data={"startTime":startTime,"endTime":$("input:eq(1)").val(),"export":$("input:eq(2)").val(),"subject":$("select:first").val()};
+	 //给出参数以后的json数据 打印出数据组
+	 console.log(input_data);
+	 //getlist（获取列表）是定义的名字，在下面进行了解释，这个date指的是刚定义的json数据
+	 getlist(input_data);
  }
+ //对大括号里的方法命名为getlist  大括号里进行了解释，具体的操作步骤，定义getlist
  function getlist(data){
-	 //
+	 //empty(清空)是什么？生成一个表格   清除之前的内容表格  #table指的是找到id=table的表格  #指的根据id去找
 	 $("#table").empty();
-	 //
-	 $.get('http://ysfcds.cn:8081/eye/count/student/getBaoMingBiaoCount',data,function(data,i){
-		 //
+	 //第一个data指刚才打印出来的所有的数据组 ，输入进来的内容   第二个date指第一组数据？返回来的数据  status返回结果的状态，成功了status="success",失败status="error"
+	 $.get('http://ysfcds.cn:8081/eye/count/student/getBaoMingBiaoCount',data,function(data,status){
+		 console.log(status);
+		 //将第i行date数据生成一行表格？是的 
 		  $.each(data,function(i,item){
-			  //
+			  //，将选出来的数据生成表格，表格的格式，
 			 $("#table").append("<tr><td>"+item.idCard+"</td><td>"+item.name+"</td><td>"+item.sex+"</td><td>"+item.phone+"</td><td>"+item.subject+"</td><td>"+item.commitTime+"</td></tr>");
 			  });
 	  },"json");
