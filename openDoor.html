@@ -12,19 +12,19 @@
 		<p id ="message"></p>
 		<script type="application/javascript">
 			function openDongMen(){
-				$.post('http://ysfcds.cn/eye/homestay/openDongMen',function(data,status){
+				$.post('https://wx.ysfcds.cn/eye/homestay/openDongMen',function(data,status){
 						 console.log(status);
 						 $('#message').text(JSON.stringify(data));
 				 },"json");
 			}
 			function openLouYuMen(){
-				$.post('http://ysfcds.cn/eye/homestay/openLouYuMen',function(data,status){
+				$.post('https://wx.ysfcds.cn/eye/homestay/openLouYuMen',function(data,status){
 						 console.log(status);
 						 $('#message').text(JSON.stringify(data));
 				 },"json");
 			}
 			function select(){
-				$.get('http://ysfcds.cn/eye/homestay/get',function(data,status){
+				$.get('https://wx.ysfcds.cn/eye/homestay/get',function(data,status){
 						 console.log(status);
 						 $('#message').text(JSON.stringify(data));
 				 },"json");
