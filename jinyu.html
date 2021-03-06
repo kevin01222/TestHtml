@@ -40,6 +40,7 @@
 //	jquery代码格式$  $("")选择器  $.自定义方法  $(function(){..})在页面加载之前执行的方法
 $(function(){
 	//执行什么内容，select（查询）指的是什么？调用方法，这个方法在下面进行了定义，名字是select，大括号里进行了解释，名字可以变成任何
+	init();
 	select();
  });
 //页面加载后开始执行，执行的什么？这个select是一个名字，大括号里的是解释它在做什么
@@ -64,11 +65,24 @@ var select=function(){
 		 console.log(status);
 		 //将第i行date数据生成一行表格？是的 
 		  $.each(data,function(i,item){
-			  //，将选出来的数据生成表格，表格的格式，
+			  console.log(item);//，将选出来的数据生成表格，表格的格式，
 			 $("#table").append("<tr><td>"+item.idCard+"</td><td>"+item.name+"</td><td>"+item.sex+"</td><td>"+item.phone+"</td><td>"+item.subject+"</td><td>"+item.commitTime+"</td></tr>");
 			  });
 	  },"json");
  }
+//init用来初始化下拉框中的数据
+function init(data){
+	var select=$("select:eq(0)");
+		select.empty();
+	 $.get('http://localhost:8082/eye/count/student/getAllSubject',function(data,status){
+		 console.log(status);
+		 //将第i行date数据生成一行表格？是的 
+		  $.each(data,function(i,item){
+			  console.log(item);//，将选出来的数据生成表格，表格的格式，
+			 select.append("<option>"+item.name+"</option>");
+			  });
+	  },"json");
+}
 </script>
 </body>
 </html>

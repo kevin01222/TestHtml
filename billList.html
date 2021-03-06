@@ -11,12 +11,17 @@
 </script> 
 <script>
 $(function(){
+
 	var nowDay=getNowFormatDate();
 	console.log("nowDay="+nowDay);
 	$.get('http://ysfcds.cn/eye/bill/getAll',function(data,i){
 		console.log(data.data.ret_list);
 		console.log(data.data.countObjDay);
 		console.log(data.data.countObjMonth);
+		//修改列宽长度
+		var conlumn=data.data.ret_list.length;
+		console.log("conlumn*22+360:"+(conlumn*220+360)+"px");
+		$("#div").css("width",(conlumn*220+360)+"px");
 		
 		var sum_count=0;
 		var sum_weijiaofei=0;
@@ -69,9 +74,10 @@ $(function(){
 				console.log("过期的月："+date)
 				$("#count2").append("<tr><td><del>"+date+"</del></td><td><del>"+parseFloat(count).toFixed(2)+"</del></td></tr>");
 			}else{
+				console.log("未过期的月："+date)
 				if(weijiaofei!=count){
 					//如果有过缴费的，就把总金额划掉，后面加个未交费的。
-					console.log(date+":"+weijiaofei);
+					console.log(date+"未交费:"+weijiaofei+",count="+count);
 					$("#count2").append("<tr><td>"+date+"</td><td><del>"+parseFloat(count).toFixed(2)+"</del>,"+parseFloat(weijiaofei).toFixed(2)+"</td></tr>");
 				}else{
 					$("#count2").append("<tr><td>"+date+"</td><td>"+parseFloat(count).toFixed(2)+"</td></tr>");

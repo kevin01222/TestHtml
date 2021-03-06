@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>js实现在字符串中提取数字 和字母</title>
+
+</head>
+
+
+<body>
+<input type="text" id="btn_getNum"/>
+<input type="button" value="得到数字" οnclick="getNum();"/>
+<script language="javascript" type="text/javascript">
+function getNum(text){
+	alert(123);
+	var value = text.replace(/[^0-9]/ig,""); 
+	var b = text.replace(/[^a-z]+/ig,"");
+	alert(value);
+	alert(b);
+	alert(b+(Number(value) + Number(1)))
+}
+</script>
+</body>
+</html>

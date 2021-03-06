@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>认识table表标签</title>
+<style type="text/css">table tr td,th{ border:1 px solid #000;}</style>
+</head>
+<body>
+<!-- Textarea 对象代表 HTML 表单中的一个文本域 (text-area)。-->
+<textarea id="students"></textarea>
+<!--select()指的是js代码里的一种方法 -->
+	<button  onclick="select()">提交</button>
+<table border="1" id="table"> <tr> <th> 姓名</th>
+</tr>
+</table> 
+<!-- script，允许使用jquery代码   您可以使用 getElementById() 来访问 <script> 元素：
+
+var x = document.getElementById("myScript"); -->
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script> 
+<script>
+//	jquery代码格式$  $("")选择器  $.自定义方法  $(function(){..})在页面加载之前执行的方法
+$(function(){
+	//执行什么内容，select（查询）指的是什么？调用方法，这个方法在下面进行了定义，名字是select，大括号里进行了解释，名字可以变成任何
+	select();
+ });
+//页面加载后开始执行，执行的什么？这个select是一个名字，大括号里的是解释它在做什么
+var select=function(){
+	//eq是什么意思？找到滴几个input
+	//开始时间赋值为变量，执行jquery代码，val指什么?input里的value值
+	//将startTime从html里找到并定义成一个变量
+	var students=$("#students").val();
+	//date是那部分数据？只是命名      给需要的数据写的参数
+	 var input_data=JSON.stringify(students);
+	 //给出参数以后的json数据 打印出数据组
+	 console.log("select:input_data");
+	 console.log(input_data);
+	 //getlist（获取列表）是定义的名字，在下面进行了解释，这个date指的是刚定义的json数据
+	 getlist(input_data);
+ }
+ //对大括号里的方法命名为getlist  大括号里进行了解释，具体的操作步骤，定义getlist
+ function getlist(input_data){
+	 //empty(清空)是什么？生成一个表格   清除之前的内容表格  #table指的是找到id=table的表格  #指的根据id去找
+	 $("#table").empty();
+	 console.log("getList:input_data");
+	 console.log(input_data);
+	 var url='http://ysfcds.cn:8081/eye/kindergarten/count';
+	 //第一个data指刚才打印出来的所有的数据组 ，输入进来的内容   第二个date指第一组数据？返回来的数据  status返回结果的状态，成功了status="success",失败status="error"
+/* 	 $.post(url,input_data,function(data,status){
+		 console.log(input_data,status);
+		 //将第i行date数据生成一行表格？是的 
+		  $.each(data,function(i,item){
+			  //，将选出来的数据生成表格，表格的格式，
+			 $("#table").append("<tr><td>"+item+"</td></tr>");
+			  });
+	  },"json"); */
+	  
+	  $.ajax({
+	    url:url,
+	    type:"POST",
+	    data:input_data,
+	    contentType:"application/json; charset=utf-8",
+	    dataType:"json",
+	    success: function(result,status,xhr){
+			$.each(result,function(i,item){
+				//，将选出来的数据生成表格，表格的格式，
+				 $("#table").append("<tr><td>"+item+"</td></tr>");
+			});
+	    }})
+ }
+</script>
+</body>
+</html>

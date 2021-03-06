@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<button  onclick="select()">获取门锁密码</button>
+		<button  onclick="openDongMen()">开小区门(东门入口)</button>
+		<button  onclick="openLouYuMen()">开楼宇门</button>
+		<p id ="message"></p>
+		<script type="application/javascript">
+			function openDongMen(){
+				$.post('http://ysfcds.cn/eye/homestay/openDongMen',function(data,status){
+						 console.log(status);
+						 $('#message').text(JSON.stringify(data));
+				 },"json");
+			}
+			function openLouYuMen(){
+				$.post('http://ysfcds.cn/eye/homestay/openLouYuMen',function(data,status){
+						 console.log(status);
+						 $('#message').text(JSON.stringify(data));
+				 },"json");
+			}
+			function select(){
+				$.get('http://ysfcds.cn/eye/homestay/get',function(data,status){
+						 console.log(status);
+						 $('#message').text(JSON.stringify(data));
+				 },"json");
+			}
+		</script>
+	</body>
+</html>
